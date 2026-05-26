@@ -1,18 +1,27 @@
+import ArrowButton from "@/components/ui/ArrowButton";
 import { colors } from "@/theme/colors";
-import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, TextInput, View } from "react-native";
+import React from "react";
+import { KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from "react-native";
 import { AppText } from "./AppText";
 
-export function NumberInput({ time = false }: { time?: boolean }) {
+export function NumberInput({ time = false, defaultValue = "10" }: { time?: boolean; defaultValue?: string }) {
+  const [value, setValue] = React.useState(defaultValue || "");
+
+  const handleClick = (delta: number) => {
+    const newValue = parseInt(value) + delta;
+    setValue(isNaN(newValue) ? "0" : newValue.toString());
+  };
+
   return (
     <View style={styles.component}>
-      <CustomButton direction="l" />
+      <ArrowButton onPress={() => handleClick(-1)} />
       <View style={styles.box}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
-          <TextInput style={styles.input} keyboardType="numeric" />
+          <TextInput style={styles.input} keyboardType="numeric" maxLength={2} value={value} onChangeText={setValue} />
           {time && <AppText style={styles.text}>минут</AppText>}
         </KeyboardAvoidingView>
       </View>
-      <CustomButton direction="r" />
+      <ArrowButton onPress={() => handleClick(1)} direction="right" />
     </View>
   );
 }
@@ -20,6 +29,8 @@ export function NumberInput({ time = false }: { time?: boolean }) {
 const styles = StyleSheet.create({
   component: {
     flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
   box: {
     backgroundColor: colors.numberInput,
@@ -43,19 +54,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: colors.text,
     fontSize: 12,
-  },
-});
-
-function CustomButton({ direction = "l" }: { direction: "l" | "r" }) {
-  const rotation = direction === "l" ? "rotate(45deg)" : "rotate(-135deg)";
-  return <Pressable style={[buttonStyles.button, { transform: [{ rotate: rotation }] }]} />;
-}
-
-const buttonStyles = StyleSheet.create({
-  button: {
-    backgroundColor: colors.secondaryButton,
-    width: 20,
-    height: 20,
-    borderRadius: 4,
   },
 });
