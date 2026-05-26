@@ -1,14 +1,11 @@
-// import { cn } from "@/utils/cn";
-import { Text, View } from "react-native";
+import { NumberInput } from "@/components/ui/NumberInput";
+import { View } from "react-native";
 
-type Props = {
-  active?: boolean;
-};
-
-export default function Card({ active }: Props) {
+export default function Card() {
   return (
-    <View>
-      <Text>AAAA </Text>
+    <View style={{ padding: 20, flexDirection: "row", gap: 10 }}>
+      <NumberInput />
+      <NumberInput time />
     </View>
   );
 }
