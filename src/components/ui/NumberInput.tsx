@@ -4,7 +4,15 @@ import React from "react";
 import { Platform, Pressable, StyleSheet, TextInput, View } from "react-native";
 import { AppText } from "./AppText";
 
-export function NumberInput({ time = false, defaultValue = "10" }: { time?: boolean; defaultValue?: string }) {
+export function NumberInput({
+  time = false,
+  defaultValue = "10",
+  text = "",
+}: {
+  time?: boolean;
+  defaultValue?: string;
+  text?: string;
+}) {
   const [value, setValue] = React.useState(defaultValue || "");
   const [isFocused, setIsFocused] = React.useState(false);
   const inputRef = React.useRef<TextInput>(null);
@@ -15,32 +23,44 @@ export function NumberInput({ time = false, defaultValue = "10" }: { time?: bool
   };
 
   const handleChangeText = (text: string) => {
-    const onlyNumbers = text.replace(/[^0-9]/g, "");
+    const onlyNumbers = text.replace(/[^0-9]/g, "0");
     setValue(onlyNumbers);
   };
 
   return (
-    <Pressable style={styles.component} onPress={() => inputRef.current?.focus()}>
-      <ArrowButton onPress={() => handleClick(-1)} />
-      <View style={[styles.box, isFocused && styles.boxFocused]}>
-        <TextInput
-          style={styles.input}
-          ref={inputRef}
-          keyboardType="numeric"
-          maxLength={2}
-          value={value}
-          onChangeText={handleChangeText}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-        />
-        {time && !isFocused && <AppText style={styles.text}>минут</AppText>}
-      </View>
-      <ArrowButton onPress={() => handleClick(1)} direction="right" />
-    </Pressable>
+    <View style={styles.wrapper}>
+      {text && <AppText style={{ fontSize: 24 }}>{text}</AppText>}
+      <Pressable style={styles.component} onPress={() => inputRef.current?.focus()}>
+        <ArrowButton onPress={() => handleClick(-1)} />
+        <View style={[styles.box, isFocused && styles.boxFocused]}>
+          <TextInput
+            style={styles.input}
+            ref={inputRef}
+            keyboardType="numeric"
+            maxLength={2}
+            value={value}
+            onChangeText={handleChangeText}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => {
+              setIsFocused(false);
+              value === "" && setValue(defaultValue);
+            }}
+          />
+          {time && !isFocused && <AppText style={styles.text}>минут</AppText>}
+        </View>
+        <ArrowButton onPress={() => handleClick(1)} direction="right" />
+      </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    justifyContent: "space-between",
+  },
   component: {
     flexDirection: "row",
     alignItems: "center",
