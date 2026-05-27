@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Pressable } from "react-native";
 
 import ArrowIcon from "@/assets/icons/arrow.svg";
@@ -8,10 +7,9 @@ type direction = "left" | "right" | "up" | "down";
 
 export default function ArrowButton({
   direction = "left",
+  hiden = false,
   ...props
-}: { direction?: direction } & React.ComponentProps<typeof Pressable>) {
-  const [hovered, setHovered] = useState(false);
-
+}: { direction?: direction; hiden?: boolean } & React.ComponentProps<typeof Pressable>) {
   const rotationDegrees = {
     left: "0deg",
     right: "180deg",
@@ -19,11 +17,11 @@ export default function ArrowButton({
     down: "90deg",
   };
   return (
-    <Pressable {...props} onHoverIn={() => setHovered(true)} onHoverOut={() => setHovered(false)}>
+    <Pressable {...props} disabled={hiden}>
       {({ hovered, pressed }) => (
         <ArrowIcon
           fill={hovered || pressed ? colors.secondaryButtonActive : colors.secondaryButton}
-          style={{ transform: [{ rotate: rotationDegrees[direction] }] }}
+          style={{ transform: [{ rotate: rotationDegrees[direction] }], opacity: hiden ? 0 : 1 }}
         />
       )}
     </Pressable>

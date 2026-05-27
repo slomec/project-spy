@@ -17,21 +17,30 @@ export function NumberInput({
   const [isFocused, setIsFocused] = React.useState(false);
   const inputRef = React.useRef<TextInput>(null);
 
+  const maxValue = 99,
+    minValue = 1;
+
   const handleClick = (delta: number) => {
     const newValue = parseInt(value) + delta;
-    setValue(isNaN(newValue) ? "0" : newValue.toString());
+    setValue(isNaN(newValue) ? "1" : newValue.toString());
   };
 
   const handleChangeText = (text: string) => {
-    const onlyNumbers = text.replace(/[^0-9]/g, "0");
+    const onlyNumbers = text.replace(/\D/g, "");
+
     setValue(onlyNumbers);
+  };
+
+  const onBlur = () => {
+    setIsFocused(false);
+    value === "" && setValue(defaultValue);
   };
 
   return (
     <View style={styles.wrapper}>
       {text && <AppText style={{ fontSize: 24 }}>{text}</AppText>}
       <Pressable style={styles.component} onPress={() => inputRef.current?.focus()}>
-        <ArrowButton onPress={() => handleClick(-1)} />
+        <ArrowButton onPress={() => handleClick(-1)} hiden={parseInt(value) <= minValue} />
         <View style={[styles.box, isFocused && styles.boxFocused]}>
           <TextInput
             style={styles.input}
@@ -41,14 +50,11 @@ export function NumberInput({
             value={value}
             onChangeText={handleChangeText}
             onFocus={() => setIsFocused(true)}
-            onBlur={() => {
-              setIsFocused(false);
-              value === "" && setValue(defaultValue);
-            }}
+            onBlur={onBlur}
           />
           {time && !isFocused && <AppText style={styles.text}>минут</AppText>}
         </View>
-        <ArrowButton onPress={() => handleClick(1)} direction="right" />
+        <ArrowButton onPress={() => handleClick(1)} direction="right" hiden={parseInt(value) >= maxValue} />
       </Pressable>
     </View>
   );
