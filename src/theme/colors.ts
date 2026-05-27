@@ -6,4 +6,5 @@ export const colors = {
   secondary: "#62748E",
   text: "#FFFFFF",
   numberInput: "#A800B7",
+  activeInput: "#E12AFB",
 };
