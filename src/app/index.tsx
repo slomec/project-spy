@@ -1,4 +1,4 @@
-import SpyIcon from "@/assets/icons/Spy.svg";
+import SpyIcon from "@/assets/icons/spy.svg";
 import { AppText } from "@/components/ui/AppText";
 import { HelpButton } from "@/components/ui/HelpButton";
 import { NumberInput } from "@/components/ui/NumberInput";

@@ -39,7 +39,12 @@ export function NumberInput({
   return (
     <View style={styles.wrapper}>
       {text && <AppText style={{ fontSize: 24 }}>{text}</AppText>}
-      <Pressable style={styles.component} onPress={() => inputRef.current?.focus()}>
+      <Pressable
+        style={styles.component}
+        onPress={() => {
+          inputRef.current?.focus();
+        }}
+      >
         <ArrowButton onPress={() => handleClick(-1)} hiden={parseInt(value) <= minValue} />
         <View style={[styles.box, isFocused && styles.boxFocused]}>
           <TextInput
